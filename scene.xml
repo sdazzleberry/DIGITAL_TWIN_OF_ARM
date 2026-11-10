@@ -1,0 +1,11 @@
+<mujoco model="cycloidal_arm_scene">
+  <include file="cycloidal_arm.xml"/>
+  <statistic center="0 0 0.6" extent="1.4"/>
+  <visual>
+    <headlight diffuse="0.6 0.6 0.6" ambient="0.3 0.3 0.3" specular="0.1 0.1 0.1"/>
+  </visual>
+  <worldbody>
+    <light diffuse="0.8 0.8 0.8" pos="0 0 3" dir="0 0 -1"/>
+    <geom type="plane" pos="0 0 -0.011" size="3 3 0.1" rgba="0.2 0.2 0.2 1" contype="1" conaffinity="1"/>
+  </worldbody>
+</mujoco>

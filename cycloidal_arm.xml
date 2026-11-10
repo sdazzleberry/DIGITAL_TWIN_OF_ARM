@@ -1,0 +1,116 @@
+<mujoco model="cycloidal_arm">
+  <default>
+    <geom rgba="0.2 0.6 0.9 1" contype="1" conaffinity="0" />
+    <joint armature="0.05" damping="0.5" frictionloss="0.02" />
+    <position kp="1" kv="0" ctrlrange="-3.14 3.14" forcerange="-150 150" />
+  </default>
+  <compiler angle="radian" />
+
+  <option gravity="0 0 -9.81" timestep="0.001" integrator="implicitfast"
+          iterations="100" tolerance="1e-10" impratio="10" />
+
+  <asset>
+    <mesh name="base_link" content_type="model/stl" file="meshes/base_link.STL" scale="1 1 1" />
+    <mesh name="shoulder_Link" content_type="model/stl" file="meshes/shoulder_Link.STL" scale="1 1 1" />
+    <mesh name="Elbow_Link" content_type="model/stl" file="meshes/Elbow_Link.STL" scale="1 1 1" />
+    <mesh name="wrist_Link" content_type="model/stl" file="meshes/wrist_Link.STL" scale="1 1 1" />
+    <mesh name="wrist_roll_Link" content_type="model/stl" file="meshes/wrist_roll_Link.STL" scale="1 1 1" />
+    <mesh name="gripper_base" content_type="model/stl" file="meshes/gripper_base.STL" scale="1 1 1" />
+    <mesh name="gripper_jaw_upper" content_type="model/stl" file="meshes/gripper_jaw_upper.STL" scale="1 1 1" />
+    <mesh name="gripper_jaw_lower" content_type="model/stl" file="meshes/gripper_jaw_lower.STL" scale="1 1 1" />
+  </asset>
+
+  <worldbody>
+    <!-- base turret: yaws the whole arm about the vertical axis through the
+         base footprint. This is the 6th DOF. -->
+    <body name="base_link" gravcomp="1">
+      <joint name="base_joint" type="hinge" axis="0 0 1" pos="0.002 0.011 0"
+             range="-3.14 3.14" actuatorfrcrange="-100 100" />
+      <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.792 0.819 0.933 1" density="0" mesh="base_link" />
+      <geom type="mesh" contype="0" conaffinity="0" rgba="0.792 0.819 0.933 1" mesh="base_link" mass="0.682989" />
+    <body name="shoulder_Link" gravcomp="1" pos="0.002000 -0.016000 0.072000" quat="0.202901 0.202905 -0.677371 0.67737">
+      <inertial pos="-0.077128 -0.304536 -0.109495" quat="0.553642 0.437632 -0.562257 0.431075" mass="0.745907" diaginertia="0.00259145 0.00235372 0.000662828" />
+      <joint name="shoulder_joint" range="-3.14 3.14" actuatorfrcrange="-100 100" />
+      <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="1 0.949 0.898 1" density="0" mesh="shoulder_Link" />
+      <geom type="mesh" rgba="1 0.949 0.898 1" mesh="shoulder_Link" />
+      <body name="Elbow_Link" gravcomp="1" pos="-0.127290 -0.502550 0.000000" quat="-1.25314e-06 0.341156 -0.940007 3.45284e-06">
+        <inertial pos="1.8509e-05 -0.338271 0.052492" quat="0.706892 0.706876 -0.0177398 0.0177394" mass="0.64895" diaginertia="0.00280861 0.00216739 0.001082" />
+        <joint name="Elbow_joint" range="-3.14 3.14" actuatorfrcrange="-100 100" axis="0 0 -1" />
+        <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.792 0.819 0.933 1" density="0" mesh="Elbow_Link" />
+        <geom type="mesh" rgba="0.792 0.819 0.933 1" mesh="Elbow_Link" />
+        <body name="wrist_Link" gravcomp="1" pos="0.032925 -0.559510 0.047200" quat="0.634812 0.634815 0.311468 0.311467">
+          <inertial pos="8.1394e-07 -0.001595 -0.029293" quat="0.50011 0.499925 0.500075 0.49989" mass="0.269696" diaginertia="0.000156 0.000146 0.000131" />
+          <!-- pivot moved to the real wrist bearing: wrist-frame z = -40.6 mm (found from the wrist
+               mesh; the elbow mesh independently puts its bearing at the same spot, within 1 mm) -->
+          <joint name="wrist_joint" range="-3.14 3.14" actuatorfrcrange="-100 100" axis="0 1 0" pos="0 0 -0.0406" />
+          <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.792 0.819 0.933 1" density="0" mesh="wrist_Link" />
+          <geom type="mesh" rgba="0.792 0.819 0.933 1" mesh="wrist_Link" />
+          <!-- pos y sign corrected (-0.010535 -> +0.010535): centres the roll link and gripper on the
+               arm's centre plane (forearm tube axis, world Y ~ 31 mm). Was 21 mm off to one side. -->
+          <body name="wrist_roll_Link" gravcomp="1" pos="0.001214 0.010535 -0.032168" quat="0.493177 0.506729 0.493179 -0.506731">
+            <inertial pos="-0.061259 0.000198 0.009879" quat="0.707106 0.707106 0.000832246 -0.000832246" mass="0.280603" diaginertia="0.000376 0.000347 0.000142" />
+            <!-- Roll axis = gripper approach axis (local X). pos z = 10.3 mm puts it on the gripper's
+                 symmetry plane (also where this link's centre of mass sits). If the gripper still
+                 wobbles when rolling, tune the y value of pos (gripper jaw mid-plane suggests up to 0.0068). -->
+            <joint name="wrist_roll_joint" range="-3.14 3.14" actuatorfrcrange="-100 100" axis="1 0 0"
+                   pos="0 0 0.0103" />
+            <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.792 0.819 0.933 1" density="0" mesh="wrist_roll_Link" />
+            <geom type="mesh" rgba="0.792 0.819 0.933 1" mesh="wrist_roll_Link" />
+            <body name="gripper_Link" gravcomp="1" pos="-0.120820 0.041870 0.010329" quat="0.499998 0.5 0.5 -0.500002">
+              <!-- palm / frame: rigid with the wrist roll. Masses come from mesh
+                   volume at the CAD density of 1000 kg/m^3 (MuJoCo's default). -->
+              <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.792 0.819 0.933 1" density="0" mesh="gripper_base" />
+              <geom type="mesh" rgba="0.792 0.819 0.933 1" mesh="gripper_base" mass="0.12202" />
+              <!-- jaws slide along +/-z; jaw_mirror is tied to jaw_joint by an
+                   equality below, so one actuator opens and closes both. -->
+              <body name="jaw_upper" gravcomp="1">
+                <joint name="jaw_joint" type="slide" axis="0 0 1" range="-0.0145 0.025"
+                       actuatorfrcrange="-50 50" armature="0.01" />
+                <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.87 0.89 0.96 1" density="0" mesh="gripper_jaw_upper" />
+                <geom type="mesh" rgba="0.87 0.89 0.96 1" mesh="gripper_jaw_upper" conaffinity="1" mass="0.12195" />
+              </body>
+              <body name="jaw_lower" gravcomp="1">
+                <joint name="jaw_mirror" type="slide" axis="0 0 -1" range="-0.0145 0.025"
+                       actuatorfrcrange="-50 50" armature="0.01" />
+                <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.87 0.89 0.96 1" density="0" mesh="gripper_jaw_lower" />
+                <geom type="mesh" rgba="0.87 0.89 0.96 1" mesh="gripper_jaw_lower" conaffinity="1" mass="0.11901" />
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+    </body>
+  </worldbody>
+
+  <contact>
+    <exclude body1="base_link" body2="shoulder_Link" />
+    <exclude body1="shoulder_Link" body2="Elbow_Link" />
+    <exclude body1="Elbow_Link" body2="wrist_Link" />
+    <exclude body1="wrist_Link" body2="wrist_roll_Link" />
+    <exclude body1="wrist_roll_Link" body2="gripper_Link" />
+    <exclude body1="wrist_roll_Link" body2="jaw_upper" />
+    <exclude body1="wrist_roll_Link" body2="jaw_lower" />
+    <exclude body1="gripper_Link" body2="jaw_upper" />
+    <exclude body1="gripper_Link" body2="jaw_lower" />
+    <exclude body1="jaw_upper" body2="jaw_lower" />
+  </contact>
+
+  <equality>
+    <joint joint1="jaw_mirror" joint2="jaw_joint" polycoef="0 1 0 0 0" />
+  </equality>
+
+  <actuator>
+    <position name="base_act" joint="base_joint" kp="950" kv="52" />
+    <position name="shoulder_act" joint="shoulder_joint" kp="3000" kv="150" />
+    <position name="Elbow_act" joint="Elbow_joint" kp="1500" kv="58" />
+    <position name="wrist_act" joint="wrist_joint" kp="600" kv="12" />
+    <position name="wrist_roll_act" joint="wrist_roll_joint" kp="400" kv="9" />
+    <position name="gripper_act" joint="jaw_joint" kp="600" kv="26"
+              ctrlrange="-0.0145 0.025" />
+  </actuator>
+
+  <keyframe>
+    <key name="home" qpos="0 0 0 0 0 0 0" ctrl="0 0 0 0 0 0" />
+  </keyframe>
+</mujoco>

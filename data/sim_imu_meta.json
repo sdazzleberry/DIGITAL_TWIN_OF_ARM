@@ -1,0 +1,49 @@
+{
+  "rate": 200.0,
+  "timestep": 0.001,
+  "gravity": 9.81,
+  "minutes": 30.0,
+  "seed": 0,
+  "imus": {
+    "upper": {
+      "joint": "shoulder_joint",
+      "body": "shoulder_Link",
+      "pos": [
+        -0.077128,
+        -0.304536,
+        -0.109495
+      ]
+    },
+    "fore": {
+      "joint": "Elbow_joint",
+      "body": "Elbow_Link",
+      "pos": [
+        1.8509e-05,
+        -0.338271,
+        0.052492
+      ]
+    }
+  },
+  "motions": [
+    "reach",
+    "circle",
+    "flick",
+    "wave",
+    "hold",
+    "multisine"
+  ],
+  "joints_q": [
+    "shoulder",
+    "elbow"
+  ],
+  "q_all": [
+    "base",
+    "shoulder",
+    "elbow",
+    "wrist",
+    "wrist_roll"
+  ],
+  "acc_units": "g",
+  "gyr_units": "rad/s",
+  "tau_units": "actuator force (N m)"
+}

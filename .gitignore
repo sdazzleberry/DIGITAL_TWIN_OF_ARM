@@ -1,0 +1,77 @@
+# -----------------------------
+# Python bytecode / cache
+# -----------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.pyo
+*.pyd
+
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pyre/
+.coverage
+coverage.xml
+
+# -----------------------------
+# Virtual environments
+# -----------------------------
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# -----------------------------
+# IDE / editor files
+# -----------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+
+# -----------------------------
+# OS generated files
+# -----------------------------
+.DS_Store
+Thumbs.db
+
+# -----------------------------
+# Jupyter / notebooks
+# -----------------------------
+.ipynb_checkpoints/
+
+# -----------------------------
+# Local logs / temp files
+# -----------------------------
+*.log
+*.tmp
+*.bak
+
+# -----------------------------
+# Project-specific generated data
+# -----------------------------
+data/*.npz
+data/*.npy
+data/*.csv
+data/*.h5
+data/*.parquet
+data/*.zip
+data/*.tar
+data/*.gz
+
+*.pth
+*.pt
+*.onnx
+*.ckpt
+*.bin
+*.weights
+*.tflite
+
+experiments/
+models/
+models_200ms/

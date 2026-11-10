@@ -1,0 +1,117 @@
+<mujoco model="cycloidal_arm_scene">
+  <compiler angle="radian"/>
+
+  <option timestep="0.001" impratio="10" tolerance="1e-10" integrator="implicitfast"/>
+
+  <size nkey="1"/>
+
+  <statistic extent="1.4" center="0 0 0.6"/>
+
+  <visual>
+    <headlight ambient="0.3 0.3 0.3" diffuse="0.6 0.6 0.6" specular="0.1 0.1 0.1"/>
+  </visual>
+
+  <default>
+    <joint armature="0.05" damping="0.5" frictionloss="0.02"/>
+    <geom conaffinity="0" rgba="0.2 0.6 0.9 1"/>
+    <general ctrlrange="-3.14 3.14" forcerange="-150 150" input="pos" biastype="affine" biasprm="0 -1"/>
+  </default>
+
+  <asset>
+    <mesh name="base_link" content_type="model/stl" file="meshes/base_link.STL"/>
+    <mesh name="shoulder_Link" content_type="model/stl" file="meshes/shoulder_Link.STL"/>
+    <mesh name="Elbow_Link" content_type="model/stl" file="meshes/Elbow_Link.STL"/>
+    <mesh name="wrist_Link" content_type="model/stl" file="meshes/wrist_Link.STL"/>
+    <mesh name="wrist_roll_Link" content_type="model/stl" file="meshes/wrist_roll_Link.STL"/>
+    <mesh name="gripper_base" content_type="model/stl" file="meshes/gripper_base.STL"/>
+    <mesh name="gripper_jaw_upper" content_type="model/stl" file="meshes/gripper_jaw_upper.STL"/>
+    <mesh name="gripper_jaw_lower" content_type="model/stl" file="meshes/gripper_jaw_lower.STL"/>
+  </asset>
+
+  <worldbody>
+    <geom size="3 3 0.1" pos="0 0 -0.011" type="plane" conaffinity="1" rgba="0.2 0.2 0.2 1"/>
+    <light pos="0 0 3" diffuse="0.8 0.8 0.8"/>
+    <body name="base_link" gravcomp="1">
+      <joint name="base_joint" range="-3.14 3.14" actuatorfrcrange="-100 100" pos="0.002 0.011 0"/>
+      <geom pos="0 0 0" quat="1 0 0 0" type="mesh" contype="0" group="1" rgba="0.792 0.819 0.933 1" density="0" mesh="base_link"/>
+      <geom pos="0 0 0" quat="1 0 0 0" type="mesh" contype="0" rgba="0.792 0.819 0.933 1" mass="0.682989" mesh="base_link"/>
+      <body name="shoulder_Link" pos="0.002 -0.016 0.072" quat="0.202901 0.202905 -0.677371 0.67737" gravcomp="1">
+        <inertial pos="-0.077128 -0.304536 -0.109495" quat="0.553642 0.437632 -0.562257 0.431075" mass="0.745907" diaginertia="0.00259145 0.00235372 0.000662828"/>
+        <joint name="shoulder_joint" range="-3.14 3.14" actuatorfrcrange="-100 100"/>
+        <geom pos="0 0 0" quat="1 0 0 0" type="mesh" contype="0" group="1" rgba="1 0.949 0.898 1" density="0" mesh="shoulder_Link"/>
+        <geom pos="0 0 0" quat="1 0 0 0" type="mesh" rgba="1 0.949 0.898 1" mesh="shoulder_Link"/>
+        <site name="imu_upper" size="0.012" pos="-0.077128 -0.304536 -0.109495" rgba="1 0.4 0 1"/>
+        <body name="Elbow_Link" pos="-0.12729 -0.50255 0" quat="-1.25314e-06 0.341156 -0.940007 3.45284e-06" gravcomp="1">
+          <inertial pos="1.8509e-05 -0.338271 0.052492" quat="0.706892 0.706876 -0.0177398 0.0177394" mass="0.64895" diaginertia="0.00280861 0.00216739 0.001082"/>
+          <joint name="Elbow_joint" range="-3.14 3.14" actuatorfrcrange="-100 100" axis="0 0 -1"/>
+          <geom pos="0 0 0" quat="1 0 0 0" type="mesh" contype="0" group="1" rgba="0.792 0.819 0.933 1" density="0" mesh="Elbow_Link"/>
+          <geom pos="0 0 0" quat="1 0 0 0" type="mesh" rgba="0.792 0.819 0.933 1" mesh="Elbow_Link"/>
+          <site name="imu_fore" size="0.012" pos="1.8509e-05 -0.338271 0.052492" rgba="1 0.4 0 1"/>
+          <body name="wrist_Link" pos="0.032925 -0.55951 0.0472" quat="0.634812 0.634815 0.311468 0.311467" gravcomp="1">
+            <inertial pos="8.1394e-07 -0.001595 -0.029293" quat="0.50011 0.499925 0.500075 0.49989" mass="0.269696" diaginertia="0.000156 0.000146 0.000131"/>
+            <joint name="wrist_joint" range="-3.14 3.14" actuatorfrcrange="-100 100" pos="0 0 -0.0406" axis="0 1 0"/>
+            <geom quat="1 0 0 0" type="mesh" contype="0" group="1" rgba="0.792 0.819 0.933 1" density="0" mesh="wrist_Link"/>
+            <geom quat="1 0 0 0" type="mesh" rgba="0.792 0.819 0.933 1" mesh="wrist_Link"/>
+            <body name="wrist_roll_Link" pos="0.001214 0.010535 -0.032168" quat="0.493177 0.506729 0.493179 -0.506731" gravcomp="1">
+              <inertial pos="-0.061259 0.000198 0.009879" quat="0.707106 0.707106 0.000832246 -0.000832246" mass="0.280603" diaginertia="0.000376 0.000347 0.000142"/>
+              <joint name="wrist_roll_joint" range="-3.14 3.14" actuatorfrcrange="-100 100" pos="0 0 0.0103" axis="1 0 0"/>
+              <geom pos="0 0 0" quat="1 0 0 0" type="mesh" contype="0" group="1" rgba="0.792 0.819 0.933 1" density="0" mesh="wrist_roll_Link"/>
+              <geom pos="0 0 0" quat="1 0 0 0" type="mesh" rgba="0.792 0.819 0.933 1" mesh="wrist_roll_Link"/>
+              <body name="gripper_Link" pos="-0.12082 0.04187 0.010329" quat="0.499998 0.5 0.5 -0.500002" gravcomp="1">
+                <geom type="mesh" contype="0" group="1" rgba="0.792 0.819 0.933 1" density="0" mesh="gripper_base"/>
+                <geom type="mesh" rgba="0.792 0.819 0.933 1" mass="0.12202" mesh="gripper_base"/>
+                <body name="jaw_upper" gravcomp="1">
+                  <joint name="jaw_joint" type="slide" range="-0.0145 0.025" actuatorfrcrange="-50 50" armature="0.01"/>
+                  <geom pos="0 0 0" quat="1 0 0 0" type="mesh" contype="0" group="1" rgba="0.87 0.89 0.96 1" density="0" mesh="gripper_jaw_upper"/>
+                  <geom pos="0 0 0" quat="1 0 0 0" type="mesh" conaffinity="1" rgba="0.87 0.89 0.96 1" mass="0.12195" mesh="gripper_jaw_upper"/>
+                </body>
+                <body name="jaw_lower" gravcomp="1">
+                  <joint name="jaw_mirror" type="slide" range="-0.0145 0.025" actuatorfrcrange="-50 50" armature="0.01" axis="0 0 -1"/>
+                  <geom quat="1 0 0 0" type="mesh" contype="0" group="1" rgba="0.87 0.89 0.96 1" density="0" mesh="gripper_jaw_lower"/>
+                  <geom quat="1 0 0 0" type="mesh" conaffinity="1" rgba="0.87 0.89 0.96 1" mass="0.11901" mesh="gripper_jaw_lower"/>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+
+  <contact>
+    <exclude body1="base_link" body2="shoulder_Link"/>
+    <exclude body1="shoulder_Link" body2="Elbow_Link"/>
+    <exclude body1="Elbow_Link" body2="wrist_Link"/>
+    <exclude body1="wrist_Link" body2="wrist_roll_Link"/>
+    <exclude body1="wrist_roll_Link" body2="gripper_Link"/>
+    <exclude body1="wrist_roll_Link" body2="jaw_upper"/>
+    <exclude body1="wrist_roll_Link" body2="jaw_lower"/>
+    <exclude body1="gripper_Link" body2="jaw_upper"/>
+    <exclude body1="gripper_Link" body2="jaw_lower"/>
+    <exclude body1="jaw_upper" body2="jaw_lower"/>
+  </contact>
+
+  <equality>
+    <joint joint1="jaw_mirror" joint2="jaw_joint"/>
+  </equality>
+
+  <actuator>
+    <general name="base_act" joint="base_joint" gainprm="950" biasprm="0 -950 -52"/>
+    <general name="shoulder_act" joint="shoulder_joint" gainprm="3000" biasprm="0 -3000 -150"/>
+    <general name="Elbow_act" joint="Elbow_joint" gainprm="1500" biasprm="0 -1500 -58"/>
+    <general name="wrist_act" joint="wrist_joint" gainprm="600" biasprm="0 -600 -12"/>
+    <general name="wrist_roll_act" joint="wrist_roll_joint" gainprm="400" biasprm="0 -400 -9"/>
+    <general name="gripper_act" joint="jaw_joint" ctrlrange="-0.0145 0.025" gainprm="600" biasprm="0 -600 -26"/>
+  </actuator>
+
+  <sensor>
+    <accelerometer site="imu_upper" name="imu_upper_acc"/>
+    <gyro site="imu_upper" name="imu_upper_gyro"/>
+    <accelerometer site="imu_fore" name="imu_fore_acc"/>
+    <gyro site="imu_fore" name="imu_fore_gyro"/>
+  </sensor>
+
+  <keyframe>
+    <key name="home"/>
+  </keyframe>
+</mujoco>
